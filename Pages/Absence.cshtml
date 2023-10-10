@@ -1,0 +1,47 @@
+﻿@page
+@model AbsenceModel
+@{
+    ViewData["Title"] = "Absence";
+}
+
+<h2 class="text-center text-danger">Absence list of soldiers</h2>
+
+<div class="alert alert-warning">
+    <div style="background-color: orange; width: 20px; height: 20px; display: inline-block;"></div>
+    <span style="margin-left: 10px;">Temporary absent</span>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>id</th>
+            <th>Name</th>
+            <th>Start date</th>
+            <th>End date</th>
+            <th>Reason</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{
+            var currentDate = DateTime.Now.Date;
+            var currentAbsentServicemen = Model.AbsenceList
+                .Where(absence => absence.EndDate >= currentDate);
+            
+            foreach (var absence in Model.AbsenceList)
+            {
+                var isAbsent = Model.AbsenceList.Exists(a => (a.Id == absence.Id) 
+                                                             && (a.EndDate.Date >= currentDate));
+
+                <tr style="background-color: @(isAbsent ? "orange" : "white")">
+                    <td>@absence.Id</td>
+                    <td>@absence.ServicemanName</td>
+                    <td>@absence.StartDate.Date.ToString("dd/MM/yyyy")</td>
+                    <td>@absence.EndDate.Date.ToString("dd/MM/yyyy")</td>
+                    <td>@absence.Reason</td>
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+</div>

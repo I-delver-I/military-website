@@ -1,0 +1,96 @@
+﻿@page
+@model Summary
+
+@{
+    ViewData["Title"] = "Summary";
+}
+
+<h2 class="text-center text-secondary">Summary</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label for="unitSelector">Select a Unit:</label>
+        <input type="text" class="form-control" id="unitSearch" 
+               placeholder="Search for a Unit" onkeyup="filterUnits()" />
+    </div>
+    <div class="form-group">
+        <select class="form-control" id="unitSelector" asp-for="SelectedUnitName">
+            <option value="">Select Unit</option>
+            @foreach (var unit in Model.UnitNames)
+            {
+                <option value="@unit">@unit</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Query</th>
+            <th>Result</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="bg-info">
+            <td>Count of servicemen in unit</td>
+            <td>@Model.ServicemenInUnit.Count</td>
+        </tr>
+        <tr class="bg-danger">
+            <td>Count of absent servicemen in unit</td>
+            <td>@Model.AbsencesInUnit.Count</td>
+        </tr>
+        <tr>
+            <td>Count of absent servicemen in unit due to vacation</td>
+            <td>@Model.AbsencesInUnit.Where(absence => absence.Reason == "Vacation").ToList().Count</td>
+        </tr>
+        <tr>
+            <td>Count of absent servicemen in unit due to recovering at a hospital</td>
+            <td>@Model.AbsencesInUnit.Where(absence => absence.Reason == "Hospital").ToList().Count</td>
+        </tr>
+        <tr>
+            <td>Count of absent servicemen in unit due to training</td>
+            <td>@Model.AbsencesInUnit.Where(absence => absence.Reason == "Training").ToList().Count</td>
+        </tr>
+        <tr>
+            <td>Count of absent servicemen in unit due to ROTC</td>
+            <td>@Model.AbsencesInUnit.Where(absence => absence.Reason == "ROTC").ToList().Count</td>
+        </tr>
+        <tr class="bg-success">
+            <td>Count of present servicemen in unit</td>
+            <td>@(Model.ServicemenInUnit.Count - Model.AbsencesInUnit.Count)</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function filterUnits() {
+        let input;
+        input = document.getElementById("unitSearch");
+        
+        let filter;
+        filter = input.value.toUpperCase();
+        
+        let select;
+        select = document.getElementById("unitSelector");
+        
+        let options;
+        options = select.getElementsByTagName("option");
+        
+        let option;
+        
+        for (let i = 0; i < options.length; i++) {
+            option = options[i];
+            if (option.textContent.toUpperCase().indexOf(filter) > -1) {
+                option.style.display = "";
+            } else {
+                option.style.display = "none";
+            }
+        }
+    }
+</script>

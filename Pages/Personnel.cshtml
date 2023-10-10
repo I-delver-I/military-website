@@ -1,0 +1,65 @@
+﻿@page
+@model PersonnelModel;
+
+@{
+    ViewData["Title"] = "Personnel";
+}
+
+<h2 class="text-center text-secondary">Soldiers at work</h2>
+
+<div class="alert alert-warning">
+    <div style="background-color: orange; width: 20px; height: 20px; display: inline-block;"></div>
+    <span style="margin-left: 10px;">Temporary absent</span>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>id</th>
+                <th>Name</th>
+                <th>Post</th>
+                <th>Rank</th>
+                <th colspan="2">Unit 1</th>
+                <th colspan="2">Unit 2</th>
+                <th colspan="2">Unit 3</th>
+                <th colspan="2">Unit 4</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Unit Type</th>
+                <th>Unit</th>
+                <th>Unit Type</th>
+                <th>Unit</th>
+                <th>Unit Type</th>
+                <th>Unit</th>
+                <th>Unit Type</th>
+                <th>Unit</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var serviceman in Model.Servicemen)
+        {
+            var isAbsent = Model.CurrentAbsentServicemen.Exists(absence => absence.ServicemanId == serviceman.Id);
+            
+            <tr style="background-color: @(isAbsent ? "orange" : "white")">
+                <td>@serviceman.Id</td>
+                <td>@serviceman.Name</td>
+                <td>@serviceman.Post</td>
+                <td>@serviceman.Rank</td>
+                <td style="background-color: lightblue;">@serviceman.UnitType1</td>
+                <td style="background-color: lightblue;">@serviceman.Unit1</td>
+                <td style="background-color: lightgreen;">@serviceman.UnitType2</td>
+                <td style="background-color: lightgreen;">@serviceman.Unit2</td>
+                <td style="background-color: lightcoral;">@serviceman.UnitType3</td>
+                <td style="background-color: lightcoral;">@serviceman.Unit3</td>
+                <td style="background-color: lightsalmon;">@serviceman.UnitType4</td>
+                <td style="background-color: lightsalmon;">@serviceman.Unit4</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
